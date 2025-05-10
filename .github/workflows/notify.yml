@@ -1,0 +1,27 @@
+name: Poll Firestore and Send Notifications
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Runs every 10 minutes
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Write service account key
+        run: echo "${{ secrets.SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+
+      - name: Run notification script
+        run: node pollAndNotify.js
